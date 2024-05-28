@@ -1,0 +1,10 @@
+.obsidian
+.venv
+.vscode
+
+node_modules
+venv
+
+package-lock.json
+
+*.js

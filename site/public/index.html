@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="shortcut icon" href="/static/img/favicon.png" type="image/png">
+    <title>Cloudfair</title>
+    
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <!-- Toolbar -- open buttons for the few other pages to view. -->
+    <nav id="toolbar">
+        <button class="icon i-question bordered" popovertarget="help-popover">
+            <span class="sr-label">open help menu</span>
+        </button>
+        <button class="icon i-github bordered" onclick="window.location = 'https://github.com/cryptiddddd/cloudfair'">
+            <span class="sr-label">view on github.</span>
+        </button>
+    </nav>
+
+    <!-- buttons to open hidden windows. -->
+    <nav id="window-bar">
+        <button id="open-message-menu" class="bordered show-window">(open) send message</button>
+        <button id="open-draw-menu" class="bordered show-window">(open) draw</button>
+        <button id="open-create-menu" class="bordered show-window">(open) create a room</button>
+        <button id="open-join-menu" class="bordered show-window">(open) join a room</button>
+    </nav>
+
+    <!-- Help popover. -->
+    <section popover id="help-popover">
+        <div class="popover-wrapper">
+            <div class="popover-title">
+                <h1>hint menu</h1>
+            </div>
+            <div class="popover-content">
+                <p>hello!</p>
+                <p>welcome to <b>cloudfair</b>, a super-simple chat application. here are a few tips to get you started:</p>
+
+                <ul>
+                    <li><b>create a room</b> with the 'create a room' window. you will automatically join this room if it is created successfully!</li>
+                    <li><b>join an existing room</b> with the 'join a room' window. if a room of the given name does not already exist, try to create a room instead.</li>
+                    <li><b>enter a username</b> and select a favorite color before sending your first message.</li>
+                    <li>try <b>drawing</b> in the canvas window. the next message you send will be accompanied by your art as a backdrop.</li>
+                    <li>to <b>send just your drawing</b>, enter a single <code>/</code> character into the message box. this tells the client to ignore your message input completely, and not validate the length!</li>
+                </ul>
+
+                <p>thank you for using cloudfair, please enjoy!</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Display current room name. -->
+    <span id="current-room"></span>
+
+    <!-- Container of messages -->
+    <main id="message-container"></main>
+
+    <!-- Container of errors -->
+    <aside id="error-container"></aside>
+    
+    <!-- Prototype menu -->
+    <section id="message-menu" class="floating-menu">
+        <div class="menu-title">
+            <span>send message</span>
+            <button id="close-message-menu" class="icon i-close">
+                <span class="sr-label">close message menu</span>
+            </button>
+        </div>
+        <div class="menu-contents">
+            <input type="text" name="username" id="username" maxlength="18" placeholder="username..." />
+
+            <input type="color" name="usercolor" id="usercolor" />
+
+            <textarea name="message-input" id="message-input" rows="1" maxlength="80" placeholder="type message..."></textarea>
+
+            <button id="send-message" class="icon i-send">
+                <span class="sr-label">send message</span>
+            </button>
+        </div>
+    </section>
+
+    <section id="art-menu" class="floating-menu">
+        <div class="menu-title">
+            <span>draw</span>
+            <button id="close-art-menu" class="icon i-close">
+                <span class="sr-label">close drawing menu</span>
+            </button>
+        </div>
+        <div class="menu-contents">
+            <div class="doodle-tools">
+                <button class="color-b" id="color-red">
+                    <span class="sr-label">change drawing color to red</span>
+                </button>
+                <button class="color-b" id="color-orange">
+                    <span class="sr-label">change drawing color to orange</span>
+                </button>
+                <button class="color-b" id="color-yellow">
+                    <span class="sr-label">change drawing color to yellow</span>
+                </button>
+                <button class="color-b" id="color-green">
+                    <span class="sr-label">change drawing color to green</span>
+                </button>
+                <button class="color-b" id="color-blue">
+                    <span class="sr-label">change drawing color to blue</span>
+                </button>
+                <button class="color-b" id="color-indigo">
+                    <span class="sr-label">change drawing color to indigo</span>
+                </button>
+                <button class="color-b" id="color-violet">
+                    <span class="sr-label">change drawing color to violet</span>
+                </button>
+                <button class="color-b" id="color-black">
+                    <span class="sr-label">change drawing color to black</span>
+                </button>
+                <button class="color-b" id="color-white">
+                    <span class="sr-label">change drawing color to white</span>
+                </button>
+
+                <button id="doodle-size" class="sm">
+                    <span class="sr-label">cycle stroke size</span>
+                </button>
+            </div>
+            <canvas id="doodle-canvas"></canvas>
+        </div>
+    </section>
+
+    <section id="join-menu" class="floating-menu">
+        <div class="menu-title">
+            <span>join a room</span>
+            <button id="close-join-menu" class="icon i-close">
+                <span class="sr-label">close join room menu</span>
+            </button>
+        </div>
+        <div class="menu-contents simple-h">
+            <input type="text" id="join-room-id" maxlength='24' placeholder="enter room ID" />
+            <button id="join-room" class="icon i-arrow">
+                <span class="sr-label">join room</span>
+            </button>
+        </div>
+    </section>
+
+    <section id="create-menu" class="floating-menu">
+        <div class="menu-title">
+            <span>create a room</span>
+            <button id="close-create-menu" class="icon i-close">
+                <span class="sr-label">close create room menu</span>
+            </button>
+        </div>
+        <div class="menu-contents simple-h">
+            <input type="text" id="create-room-id" maxlength='24' placeholder="enter a unique room ID" />
+            <button id="create-room" class="icon i-arrow">
+                <span class="sr-label">create room</span>
+            </button>
+        </div>
+    </section>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        // Create socket, available for all the window.
+        window.socket = io();
+    </script>
+    <script type="module" src="/static/scripts/app.js"></script>
+</body>
+</html>

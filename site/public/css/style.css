@@ -1,0 +1,583 @@
+@font-face {
+    font-family: "NintendoDS BIOS";
+    src: url('/static/fonts/NDS-bios.ttf');
+}
+
+
+:root {
+    /* COLORS */
+    --skyblue-0: #7FD7F6;
+    --skyblue-1: #C4EDFB;
+
+    --grassgreen-0: #7EC893;
+
+    --text-color: #0E0E25;
+
+    --red: #FF6C81;
+    --orange: #FFAC6C;
+    --yellow: #FFEF6C;
+    --green: #A0FF6C;
+    --blue: #6CDFFF;
+    --indigo: #6CA3FF;
+    --violet: #AA6CFF;
+
+    --menu-trim: #959595;
+    --menu-body: #E9E9E9;
+    --menu-input: #FFFFFF;
+
+    /* GRADIENTS */
+    --cloud: white;
+
+    /* SNIPPETS */
+    --menu-border: 1px solid var(--menu-trim);
+    --menu-radius: 3px;
+
+    /* FONT */
+    --body-font: "NintendoDS BIOS";
+    --font-size: 18px;
+
+    /* SPACING */
+    --menu-grid-gap: 1ex;
+}
+
+::selection {
+    background-color: color-mix(in srgb, var(--skyblue-1), transparent);
+}
+
+:focus-visible {
+    outline: 2px solid var(--skyblue-0);
+    outline-offset: 1px;
+}
+
+
+body {
+    background: linear-gradient(to top, var(--skyblue-1), var(--skyblue-0));
+    color: var(--text-color);
+    font: var(--font-size) var(--body-font);
+    
+    height: 100dvh;
+    margin: 0;
+    overflow: hidden;
+    word-spacing: 2px;
+}
+
+ul {
+    list-style-type: square;
+}
+
+li {
+    margin: 0.5ex 0;
+}
+
+
+code {
+    background-color: var(--skyblue-0);
+    color: black;
+    font: 12px 'monospace';
+
+    border-radius: var(--menu-radius);
+    padding: 2px 3px;
+}
+
+button {
+    cursor: pointer;
+}
+
+button, canvas, input, textarea {
+    background-color: transparent;
+    border: var(--menu-border);
+    border-radius: var(--menu-radius);
+    font: inherit;
+}
+
+input[type=color] {
+    padding: 0;
+    border: none;
+}
+
+input[type=text], textarea {
+    background-color: var(--menu-input);
+    padding: 0.5ex 1ex;
+
+    resize: vertical;
+    min-height: 1em;
+}
+
+::placeholder {
+    color: var(--menu-trim);
+}
+
+.sr-label {
+    display: none;
+}
+
+.doodle-tools {
+    display: flex;
+    flex-flow: row nowrap;
+    gap: calc(var(--menu-grid-gap) / 2);
+    margin-bottom: var(--menu-grid-gap);
+
+    height: 1em;
+}
+
+/* Current room indicator. */
+#current-room {
+    position: absolute;
+    top: 1em;
+    left: 1em;
+}
+
+#current-room::before {
+    content: "current room:";
+    font-style: italic;
+    opacity: 0.5;
+    margin-right: 1ex;
+}
+
+#current-room:empty::before {
+    content: "no current room.";
+}
+
+
+/* NAVS */
+
+nav {
+    position: absolute;
+
+    align-items: start;
+    display: flex;
+    gap: 1ex;
+
+    box-sizing: border-box;
+}
+
+/* TOOLBAR */
+
+#toolbar {
+    flex-flow: column nowrap;    
+
+    height: 100dvh;
+    overflow-y: auto;
+    padding: 3em 1ex;
+}
+
+
+/* WINDOW BAR */
+
+#window-bar {
+    flex-flow: row nowrap;
+    justify-content: flex-end;
+    
+    overflow-x: auto;
+    padding: 1ex 3em;
+    width: 100dvw;
+}
+
+button.show-window {
+    padding: 1.5ex 3ex!important;
+
+    /* Hide by default. */
+    display: none;  
+}
+
+/* COLOR BUTTONS */
+
+.color-b {
+    flex: 1 0 auto;
+}
+
+#color-red {
+    background-color: var(--red);
+}
+
+#color-orange {
+    background-color: var(--orange);
+}
+
+#color-yellow {
+    background-color: var(--yellow);
+}
+
+#color-green {
+    background-color: var(--green);
+}
+
+#color-blue {
+    background-color: var(--blue);
+}
+
+#color-indigo {
+    background-color: var(--indigo);
+}
+
+#color-violet {
+    background-color: var(--violet);
+}
+
+#color-black {
+    background-color: black;
+}
+
+#color-white {
+    background-color: white;
+}
+
+#doodle-size {
+    flex: 1 1 auto;
+    background-color: white;
+
+    position: relative;
+    clip-path: inset(0 0 0 0);
+}
+
+#doodle-size::before {
+    content: "";
+    background-color: black;
+    border-radius: 50%;
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+
+    translate: -50% -50%;
+
+    width: var(--size);
+    height: var(--size);
+}
+
+/* Sizes are not accurate to drawing size. */
+#doodle-size.sm {
+    --size: 1px;
+}
+
+#doodle-size.md {
+    --size: 5px;
+}
+
+#doodle-size.lg {
+    --size: 10px
+}
+
+#doodle-size.xl {
+    --size: 20px
+}
+
+
+/* SVG things */
+.icon::before, .cloud {
+    -webkit-mask-image: var(--icon-url);
+    -webkit-mask-position: center;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-size: contain;
+    mask-image: var(--icon-url);
+    mask-position: center;
+    mask-repeat: no-repeat;
+    mask-size: contain;
+}
+
+
+/* ICONS */
+
+.icon {
+    --icon-size: 1.4em;
+    border-radius: 3px;
+    padding: 0.5ex 1ex;
+}
+
+button.icon {
+    border: none;
+}
+
+button.icon:hover {
+    background-color: color-mix(in srgb, var(--menu-trim) 20%, transparent);
+}
+
+button.bordered {
+    background-color: var(--menu-body);
+    opacity: 0.8;
+
+    padding: 1ex;
+}
+
+/* Reusing this decorative outline pattern. */
+button.bordered, [popover] {
+    border-radius: calc(var(--menu-radius) * 1.5);
+    outline: var(--menu-border);
+    outline-width: 2px;
+    outline-offset: -4px;
+}
+
+button.bordered:hover {
+    opacity: 0.95;
+}
+
+button.bordered:hover {
+    background-color: color-mix(in srgb, var(--menu-body) 80%, var(--menu-trim));
+}
+
+.icon::before {
+    content: "";
+
+    background-color: var(--menu-trim);
+    height: var(--icon-size);
+    width: var(--icon-size);
+    display: block;
+
+    margin: auto;
+}
+
+.i-arrow::before {
+    --icon-url: url('/static/img/arrow.svg');
+}
+
+.i-close::before {
+    --icon-url: url('/static/img/arrow.svg');
+    transform: rotateZ(180deg);
+}
+
+.i-gear::before {
+    --icon-url: url('/static/img/gear.svg');
+}
+
+.i-github::before {
+    --icon-url: url('/static/img/github.svg')
+}
+
+.i-question::before {
+    --icon-url: url('/static/img/question.svg');
+}
+
+.i-send::before {
+    --icon-url: url("/static/img/send.svg");
+}
+
+
+/* CLOUD styling */
+
+#message-container {
+    display: contents;
+}
+
+.cloud {
+    --pad-y: 2em;
+    --pad-x: 2em;
+    background: var(--cloud);
+    box-sizing: border-box;
+    padding: var(--pad-y) var(--pad-x);
+    position: absolute;
+    
+    height: 200px;
+    width: 300px;
+
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    flex-flow: column nowrap;
+
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+
+    opacity: 0.8;
+}
+
+.cloud-timestamp {
+    opacity: 0.5;
+}
+
+.cloud-message {
+    align-self: center;
+    text-align: center;
+    margin-top: 1em;
+    word-break: break-all;
+}
+
+/* Variations */
+.c1 {
+    --icon-url: url('/static/img/cloud1.svg');
+}
+.c2 {
+    --icon-url: url('/static/img/cloud2.svg');
+    --pad-x: 4em;
+}
+.c3 {
+    --icon-url: url('/static/img/cloud3.svg');
+    align-items: start;
+}
+.c4 {
+    --icon-url: url('/static/img/cloud4.svg');
+}
+.c5 {
+    --icon-url: url('/static/img/cloud5.svg');
+}
+.c6 {
+    --icon-url: url('/static/img/cloud6.svg');
+}
+.c7 {
+    --icon-url: url('/static/img/cloud7.svg');
+    align-items: start;
+}
+.c8 {
+    --icon-url: url('/static/img/cloud8.svg');
+}
+.c9 {
+    --icon-url: url('/static/img/cloud9.svg');
+    align-items: start;
+}
+
+/* ERROR styling */
+
+#error-container {
+    box-sizing: border-box;
+    padding: 1em 4em;
+    height: 100vh;
+
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 1ex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.menu-title, .error-message {
+    background-color: color-mix(in srgb, var(--menu-body) 70%, transparent);
+    user-select: none;
+}
+
+.error-message {
+    border: var(--menu-border);
+    border-radius: var(--menu-radius);
+    padding: 1ex 1.5em;
+}
+
+.input-attention, .input-error {
+    outline: 2px solid var(--input-status-color);
+    outline-offset: 1px;
+}
+
+.input-attention {
+    --input-status-color: var(--yellow);
+}
+
+.input-error {
+    --input-status-color: var(--red);
+}
+
+
+/* MENU styling */
+
+.floating-menu {
+    border: var(--menu-border);
+    border-radius: var(--menu-radius);
+    box-sizing: border-box;
+
+    opacity: 0.89;
+    position: absolute;
+}
+
+.floating-menu:focus-within, .floating-menu:hover {
+    opacity: 1;
+}
+
+.menu-title {
+    /* Shares styling with error message. */
+    border-bottom: var(--menu-border);
+    cursor: grab;
+    padding: 1ex 1.5ex;
+
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+}
+
+.menu-title .icon {
+    --icon-size: 1em;
+    box-sizing: border-box;
+    padding: 0 1ex;
+}
+
+.menu-contents {
+    background-color: var(--menu-body);
+    padding: 1ex 1.5ex;
+}
+
+
+/* SPECIFIC MENU LAYOUTS */
+#message-menu {
+    bottom: 1em;
+    left: 1em;
+}
+
+#message-menu .menu-contents {
+    display: flex;
+    flex-flow: row wrap;
+    gap: var(--menu-grid-gap);
+
+    width: 300px;
+}
+
+#username {
+    flex: 1 0 auto;
+}
+
+#message-input {
+    flex: 1 0 auto;
+    max-height: 3em;
+}
+
+#art-menu {
+    left: 1em;
+    top: 55%;
+}
+
+#join-menu {
+    right: 1em;
+    top: 40%;
+}
+
+#create-menu {
+    right: 1em;
+    top: 50%;
+}
+
+.menu-contents.simple-h {
+    display: grid;
+    grid-auto-flow: column;
+    gap: var(--menu-grid-gap);
+}
+
+
+/* POPOVER styling */
+
+[popover] {
+    background-color: var(--menu-input);
+    border: none;
+    color: var(--body-font);
+
+    margin: auto 4em;
+    padding: 0.5em 1em;
+}
+
+[popover]::backdrop {
+    background-color: color-mix(in srgb, var(--text-color), transparent);
+}
+
+section#help-popover > .popover-wrapper {
+    display: grid;
+    grid-auto-flow: row;
+}
+
+.popover-title {
+    border-bottom: var(--menu-border);
+}
+
+.popover-content {
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 1em;
+    padding: 1em;
+}
+
+.popover-content > * {
+    margin: 0;
+}
