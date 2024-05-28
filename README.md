@@ -1,4 +1,4 @@
-# Assignment 5
+# Cloudfair
 
 > To initialize, build, and run this project, please use:
 >   ```sh
